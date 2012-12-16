@@ -12,7 +12,7 @@ $params = array(
         "desc" => "prop_file.basePath_desc",
         "type" => "textfield",
         "options" => Array(),
-        "value" => "core/components/modxsite/controllers/",
+        "value" => "core/components/modxrepository/controllers/",
         "lexicon" => "core:source",
     ),
     "baseUrl" => Array
@@ -21,15 +21,15 @@ $params = array(
         "desc" => "prop_file.baseUrl_desc",
         "type" => "textfield",
         "options" => Array(),
-        "value" => "core/components/modxsite/controllers/",
+        "value" => "core/components/modxrepository/controllers/",
         "lexicon" => "core:source",
     )
 );
 
 $mediaSource = $modx->newObject('sources.modMediaSource', array(
-    'name' => 'Controllers',
+    'name' => 'Repository Controllers',
     'class_key' => 'sources.modFileMediaSource',
-    'description'   => 'Source for site controllers (modTemplate`s)',
+    'description'   => 'Source for Repository Controllers controllers (modTemplate`s)',
     'properties' => $params,
 ));
 
@@ -42,7 +42,7 @@ $params = array(
         "desc" => "prop_file.basePath_desc",
         "type" => "textfield",
         "options" => Array(),
-        "value" => "core/components/modxsite/templates/",
+        "value" => "core/components/modxrepository/templates/",
         "lexicon" => "core:source",
     ),
     "baseUrl" => Array
@@ -51,15 +51,15 @@ $params = array(
         "desc" => "prop_file.baseUrl_desc",
         "type" => "textfield",
         "options" => Array(),
-        "value" => "core/components/modxsite/templates/",
+        "value" => "core/components/modxrepository/templates/",
         "lexicon" => "core:source",
     )
 );
 
 $mediaSource = $modx->newObject('sources.modMediaSource', array(
-    'name' => 'Templates',
+    'name' => 'Repository Templates',
     'class_key' => 'sources.modFileMediaSource',
-    'description'   => 'Source for site templates (Site skins)',
+    'description'   => 'Source for Repository Templates templates (Skins)',
     'properties' => $params,
 ));
 

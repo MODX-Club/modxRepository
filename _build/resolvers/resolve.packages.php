@@ -9,6 +9,12 @@ if ($object->xpdo) {
         case xPDOTransport::ACTION_UPGRADE:
             
             if ($modx instanceof modX) {
+                if(!$provider = $modx->getObject('transport.modTransportProvider', array(
+                    'name'  => 'modx.com',
+                ))){
+                    return $modx->log(modX::LOG_LEVEL_ERROR, "Could not get transport provider");
+                }
+                
                 if(!$modx->loadClass('transport.modTransportPackage')){
                     return $modx->log(modX::LOG_LEVEL_ERROR, "Could not load modTransportPackage class");
                 }
@@ -55,7 +61,7 @@ if ($object->xpdo) {
                     // $modx->log(modX::LOG_LEVEL_INFO, "Try to get '{$packageName}' package.");
                     
                     $response = $modx->runProcessor('workspace/packages/rest/getlist', array(
-                        'provider' => 1,
+                        'provider' => $provider->get('id'),
                         'query'  => $packageName,
                     ));
                     
@@ -105,7 +111,7 @@ if ($object->xpdo) {
                     );
                             
                     $response = $modx->runProcessor('workspace/packages/rest/download', array(
-                        'provider' => 1,
+                        'provider' => $provider->get('id'),
                         'info'  =>  "{$package['location']}::{$package['signature']}",
                     ));
                     
