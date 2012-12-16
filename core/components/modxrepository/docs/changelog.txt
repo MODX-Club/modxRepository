@@ -1,0 +1,11 @@
+modxSite-0.0.2-beta
+=============================================================
+1.  Added MediaSource Controllers for site controllers (modTemplate`s)
+2.  Added MediaSource Templates for site templates (site skins)
+3.  Added system setting modxSite.template_url
+
+
+modxSite-0.0.1-beta
+=============================================================
+1.  Created core
+2.  Created packages installation resolver
