@@ -8,11 +8,7 @@ class modxRepositoryPackagePrepareRow extends modProcessor{
         return $this->preparePackageRow($this->properties);
     }
     
-    function preparePackageRow($data){
-        /*print_r($data);
-        
-        exit;*/
-        
+    function preparePackageRow($data){  
         $varsArray = array();
         $vers = array(
             'version_major',
@@ -20,15 +16,15 @@ class modxRepositoryPackagePrepareRow extends modProcessor{
             'version_patch'
         );
         foreach($vers as $v){
-            if(isset($data[$v]))$varsArray[] = $data[$v];
+            if(isset($data[$v]))$varsArray[] = ($data[$v] ? $data[$v] : '0');
         }
         $version = implode(".", $varsArray);
         
         $vrelease  = $data['release']. ($data['vrelease_index']  ? "-{$data['vrelease_index']}" :  "");
-        
-        
+         
         return array(
             'id'    => $data['release_id'],
+            'r_content_id'    => $data['r_content_id'],
             'package'    => $data['object_id'],
             'display_name'    => $data['release_name'],
             'name'    => $data['pagetitle'],
@@ -40,9 +36,9 @@ class modxRepositoryPackagePrepareRow extends modProcessor{
             'vrelease'    => $vrelease,
             'vrelease_index'    => $data['vrelease_index'],
             'author'    => $data['author'],
-            'description'    => "<![CDATA[{$data['release_description']}]]>",
-            'instructions'    => "<![CDATA[{$data['instructions']}]]>",
-            'changelog'    => "<![CDATA[{$data['changelog']}]]>",
+            'description'    => "{$data['release_description']}",
+            'instructions'    => "{$data['instructions']}",
+            'changelog'    => "{$data['changelog']}",
             'createdon'    => date('Y-m-d H:i:s', $data['release_createdon']),
             'createdby'    => $data['author'],
             'editedon'    => date('Y-m-d H:i:s', $data['release_editedon']),

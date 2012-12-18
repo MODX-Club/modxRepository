@@ -12,7 +12,7 @@ $params = array(
         "desc" => "prop_file.basePath_desc",
         "type" => "textfield",
         "options" => Array(),
-        "value" => "core/components/modxrepository/controllers/",
+        "value" => "assets/components/modxrepository/packages/",
         "lexicon" => "core:source",
     ),
     "baseUrl" => Array
@@ -21,49 +21,20 @@ $params = array(
         "desc" => "prop_file.baseUrl_desc",
         "type" => "textfield",
         "options" => Array(),
-        "value" => "core/components/modxrepository/controllers/",
+        "value" => "assets/components/modxrepository/packages/",
         "lexicon" => "core:source",
     )
 );
 
 $mediaSource = $modx->newObject('sources.modMediaSource', array(
-    'name' => 'Repository Controllers',
+    'name' => 'Repository Packages',
     'class_key' => 'sources.modFileMediaSource',
-    'description'   => 'Source for Repository Controllers controllers (modTemplate`s)',
+    'description'   => 'Source for Repository packages',
     'properties' => $params,
 ));
 
 $mediaSources[] = $mediaSource;
-
-
-$params = array(
-    "basePath" => array(
-        "name" => "basePath",
-        "desc" => "prop_file.basePath_desc",
-        "type" => "textfield",
-        "options" => Array(),
-        "value" => "core/components/modxrepository/templates/",
-        "lexicon" => "core:source",
-    ),
-    "baseUrl" => Array
-    (
-        "name" => "baseUrl",
-        "desc" => "prop_file.baseUrl_desc",
-        "type" => "textfield",
-        "options" => Array(),
-        "value" => "core/components/modxrepository/templates/",
-        "lexicon" => "core:source",
-    )
-);
-
-$mediaSource = $modx->newObject('sources.modMediaSource', array(
-    'name' => 'Repository Templates',
-    'class_key' => 'sources.modFileMediaSource',
-    'description'   => 'Source for Repository Templates templates (Skins)',
-    'properties' => $params,
-));
-
-$mediaSources[] = $mediaSource;
+ 
 
 return $mediaSources;
         

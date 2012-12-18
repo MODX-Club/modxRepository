@@ -22,6 +22,7 @@ class modxRepositoryDownload extends modxRepositoryResponse{
             return;
         }
         
+        
         $response = $this->runProcessor('package/getpackages', array(
             'where' => array(
                 'r_object_id.value' => $id,
@@ -36,10 +37,19 @@ class modxRepositoryDownload extends modxRepositoryResponse{
             return;
         }
         
-        //  $package = current($result)->toArray();
         $package = current($result);
-         
-        $url = $this->modx->getOption('modxRepository.packages_path_url', null).$package['file'];
+        
+        $url = $this->modx->getOption('site_url', null);
+        
+        $q = $this->modx->newQuery('modTemplateVar');
+        $q->innerJoin('modTemplateVarResource', 'v', 'v.tmplvarid = modTemplateVar.id');
+        $q->where(array(
+            'v.id'  => $package['file_id'],
+        ));
+        $tv = $this->modx->getObject('modTemplateVar', $q);
+        $package_url = $tv->renderOutput($package['r_content_id']);
+        $package_url = preg_replace('/^\//','',$package_url);
+        $url .= $package_url;
         return $url;
     }
 }

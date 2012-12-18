@@ -53,7 +53,6 @@ abstract class modxRepositoryResponse extends modProcessor{
     {
         foreach ($arr as $k => $v) {
             if(is_numeric($k)){
-                // $this->array_to_xml($v,  $xml->addChild('sdfdsf'));
                 $this->array_to_xml($v,  $xml);
             }
             else if(is_array($v)){

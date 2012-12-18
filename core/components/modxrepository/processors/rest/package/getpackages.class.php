@@ -41,7 +41,7 @@ class modxRepositoryGetPackagesClass  extends modProcessor{
             'file',
         );
         
-        // print '<pre>';
+        
         if(!$result = $this->modx->getCollection('modTemplateVar', array(
             'name:IN'   => $TVsNames,
         ))){
@@ -60,29 +60,44 @@ class modxRepositoryGetPackagesClass  extends modProcessor{
         $q->innerJoin('modTemplateVarResource', 'object_id', "object_id.contentid = modResource.id");
         $q->innerJoin('modResource', 'r', 'r.parent = modResource.id');
         $q->innerJoin('modTemplateVarResource', 'r_object_id', "r_object_id.contentid = r.id");
-        $q->innerJoin('modTemplateVarResource', 'version_major', "version_major.contentid = r.id");
-        $q->innerJoin('modTemplateVarResource', 'version_minor', "version_minor.contentid = r.id");
-        $q->innerJoin('modTemplateVarResource', 'version_patch', "version_patch.contentid = r.id");
         $q->innerJoin('modTemplateVarResource', '`release`', "`release`.contentid = r.id");
         $q->innerJoin('modTemplateVarResource', '`file`', "`file`.contentid = r.id");
         $q->innerJoin('modUser', '`user`', "`user`.id = r.createdby");
         
 
+        /*
+         * 
+        $q->innerJoin('modTemplateVarResource', 'version_major', "version_major.contentid = r.id");
+        $q->innerJoin('modTemplateVarResource', 'version_minor', "version_minor.contentid = r.id");
+        $q->innerJoin('modTemplateVarResource', 'version_patch', "version_patch.contentid = r.id");
+         */
+        
         $q->leftJoin('modTemplateVarResource', 'vrelease_index', 
-                "vrelease_index.contentid = r.id AND 'vrelease_index.tmplvarid'  = ". $this->TVs['vrelease_index']);
+                "vrelease_index.contentid = r.id AND vrelease_index.tmplvarid  = ". $this->TVs['vrelease_index']);
         $q->leftJoin('modTemplateVarResource', 'r_description', 
-                "r_description.contentid = r.id AND 'r_description.tmplvarid'  = ". $this->TVs['r_description']);
+                "r_description.contentid = r.id AND r_description.tmplvarid  = ". $this->TVs['r_description']);
         $q->leftJoin('modTemplateVarResource', 'instructions', 
-                "instructions.contentid = r.id AND 'instructions.tmplvarid'  = ". $this->TVs['instructions']);
+                "instructions.contentid = r.id AND instructions.tmplvarid  = ". $this->TVs['instructions']);
         $q->leftJoin('modTemplateVarResource', 'changelog', 
-                "changelog.contentid = r.id AND 'changelog.tmplvarid'  = ". $this->TVs['changelog']);
+                "changelog.contentid = r.id AND changelog.tmplvarid  = ". $this->TVs['changelog']);
+        
+        $q->leftJoin('modTemplateVarResource', 'version_major', 
+                "version_major.contentid = r.id AND version_major.tmplvarid = ". $this->TVs['version_major']);
+        $q->leftJoin('modTemplateVarResource', 'version_minor', 
+                "version_minor.contentid = r.id AND version_minor.tmplvarid = ". $this->TVs['version_minor']);
+        $q->leftJoin('modTemplateVarResource', 'version_patch', 
+                "version_patch.contentid = r.id AND version_patch.tmplvarid = ". $this->TVs['version_patch']);
         
         $q->select(array(
             'modResource.*',
             'modResource.id as package_id',
             'object_id.value as object_id',
             'r_object_id.value as release_id',
+            'r.id as r_content_id',
             'r.pagetitle as release_name',
+            'r.createdon as release_createdon',
+            'r.editedon as release_editedon',
+            'r.publishedon as releasedon',
             'version_major.value as version_major',
             'version_minor.value as version_minor',
             'version_patch.value as version_patch',
@@ -93,9 +108,6 @@ class modxRepositoryGetPackagesClass  extends modProcessor{
             'r_description.value as release_description',
             'instructions.value as instructions',
             'changelog.value as changelog',
-            'r.createdon as release_createdon',
-            'r.editedon as release_editedon',
-            'r.publishedon as releasedon',
             'file.value as file',
             'file.id as file_id',
         ));
@@ -109,9 +121,6 @@ class modxRepositoryGetPackagesClass  extends modProcessor{
             'r.hidemenu'  => 0,
             'object_id.tmplvarid'  => $this->TVs['object_id'],
             'r_object_id.tmplvarid'  => $this->TVs['object_id'],
-            'version_major.tmplvarid'  => $this->TVs['version_major'],
-            'version_minor.tmplvarid'  => $this->TVs['version_minor'],
-            'version_patch.tmplvarid'  => $this->TVs['version_patch'],
             '`release`.tmplvarid'  => $this->TVs['release'],
             'file.tmplvarid'  => $this->TVs['file'],
         ), $where);
@@ -130,7 +139,6 @@ class modxRepositoryGetPackagesClass  extends modProcessor{
             }
         }
         
-        // $q->groupby('modResource.id');
         
         $q->prepare();
         
@@ -144,25 +152,11 @@ class modxRepositoryGetPackagesClass  extends modProcessor{
             $q->stmt = $this->modx->prepare($sql);
             //package_id
         }
-           
-        
-        // print $query->toSQL();
-        //print_R($query->queryString);
-        // exit;
-        
-        
+            
         if(!$q->stmt->execute() OR !$result = $q->stmt->fetchAll(PDO::FETCH_ASSOC)){
             $this->failure("Не были получены пакеты");
             return false;
         }
-         
-        /*print_R($result);
-        exit;*/
-         
-        /*if(!$repositories = $this->modx->getCollection('modResource', $q)){
-            
-        }*/
-        
         return $result;
     }
 }

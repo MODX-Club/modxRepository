@@ -68,10 +68,7 @@ class modxRepositoryGetRepository extends modProcessor{
         $q->where($where);
         
         $q->limit($limit);
-        
-        /*$q->prepare();
-        print $q->toSQL();
-        exit;*/
+         
         if(!$repositories = $this->modx->getCollection('modResource', $q)){
             $this->failure("Не были получены репозитории");
             return false;

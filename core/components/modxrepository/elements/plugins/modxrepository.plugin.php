@@ -1,23 +1,22 @@
 <?php
+
+/*
+ * modxRepository
+ * modxstore.ru
+ */
+
 if($modx->context->key == 'mgr')  return;
 if(!$modx->checkSiteStatus())   return;
 if(!$request_path = $modx->getOption('modxRepository.request_path', $scriptProperties, false)){
-    //$modx->log(modX::LOG_LEVEL_ERROR,   'Не указан раздел для запросов');
     return;
 }
-
-/*if(!$handler_doc_id = $modx->getOption('modxRepository.handler_doc_id', $scriptProperties, false)){
-    //$modx->log(modX::LOG_LEVEL_ERROR, 'Не указан ID документа-обработчика');
-    return;
-}*/
-
-
 
 $request = new modRequest($modx);
 
 $resourceIdentifier = $request->getResourceIdentifier("alias");
+
 /*
- * Если это не раздел для запросов, пропускаем выполнение
+ * Check for repository path
  */
 
 if(strpos($resourceIdentifier, $request_path) !== 0){
@@ -25,16 +24,16 @@ if(strpos($resourceIdentifier, $request_path) !== 0){
 }
 
 if(!$action = substr($resourceIdentifier, strlen($request_path))){
-    //$modx->log(modX::LOG_LEVEL_ERROR,'Не было получено действие');
     return;
 }
 
 
-// Получаем путь до процессоров
+// Get processors path
 if(!$ns = $modx->getObject('modNamespace', 'modxrepository')){
     $modx->log(xPDO::LOG_LEVEL_ERROR, "Не было пролучено пространство имен modxrepository");
     return;
 }
+$processors_path = $ns->getCorePath().'processors/';
 
 if (!isset($_POST)) $_POST = array();
 if (!isset($_GET)) $_GET = array();
@@ -57,10 +56,6 @@ if(count($actionArray) > 1){
     }
 }
 
-$processors_path = $ns->getCorePath().'processors/';
-
-
-// print $processors_path;
 if(!$response = $modx->runProcessor($action, $scriptProperties, array(
     'processors_path'   => $processors_path,
     'location'          => 'rest',
@@ -70,7 +65,5 @@ if(!$response = $modx->runProcessor($action, $scriptProperties, array(
 }
 
 
-
 print $response->getResponse();
-  
 exit;

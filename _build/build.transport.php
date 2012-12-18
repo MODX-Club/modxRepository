@@ -84,6 +84,16 @@ $attr = array(
             xPDOTransport::UPDATE_OBJECT => false,
             xPDOTransport::UNIQUE_KEY => array('pluginid','event'),
         ),
+        'Templates' => array(
+            xPDOTransport::PRESERVE_KEYS => false,
+            xPDOTransport::UPDATE_OBJECT => true,
+            xPDOTransport::UNIQUE_KEY => 'templatename',
+        ),
+        'TemplateVars' => array(
+            xPDOTransport::PRESERVE_KEYS => false,
+            xPDOTransport::UPDATE_OBJECT => true,
+            xPDOTransport::UNIQUE_KEY => 'name',
+        ),
     )
 );
 
@@ -97,6 +107,15 @@ else{
 }
 
 unset($plugins,$plugin,$attributes);*/
+
+
+/* Add templates */
+$templates = include $sources['data'].'transport.templates.php';
+if (!is_array($templates)) { $modx->log(modX::LOG_LEVEL_FATAL,'Adding templates failed.'); } 
+else{
+    $category->addMany($templates);
+    $modx->log(modX::LOG_LEVEL_INFO,'Packaged in '.count($templates).' templates.'); flush();
+}
 
 
 /* Create mediaSources */
@@ -115,7 +134,7 @@ else{
     }
     $modx->log(modX::LOG_LEVEL_INFO,'Packaged in '.count($mediaSources).' MediaSources.'); flush();
 }
-
+ 
 /* load system settings */
 $settings = include_once $sources['data'].'transport.settings.php';
 $attributes= array(
@@ -144,12 +163,10 @@ $vehicle->resolve('file',array(
     'target' => "return MODX_ASSETS_PATH . 'components/';",
 ));
 $modx->log(modX::LOG_LEVEL_INFO,'Packaged in AssetsPath'); flush();
- 
 
 $vehicle->resolve('php',array(
-    'source' => $sources['resolvers'] . 'resolve.packages.php',
+    'source' => $sources['resolvers'] . 'resolve.update_objects.php',
 ));
-$modx->log(modX::LOG_LEVEL_INFO,'Packaged in packager resolver.'); flush(); 
 
 
 $modx->log(modX::LOG_LEVEL_INFO,'Packaged in resolvers.'); 

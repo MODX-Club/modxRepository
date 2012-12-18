@@ -9,14 +9,14 @@
 global  $modx, $sources;
 $settings = array();
 
-/*$settings['modxRepository.template'] = $modx->newObject('modSystemSetting');
-$settings['modxRepository.template']->fromArray(array(
-    'key' => 'modxRepository.template',
-    'value' => 'default',
+$settings['modxRepository.handler_doc_id'] = $modx->newObject('modSystemSetting');
+$settings['modxRepository.handler_doc_id']->fromArray(array(
+    'key' => 'modxRepository.handler_doc_id',
+    'value' => '',
     'xtype' => 'textfield',
     'namespace' => 'modxrepository',
     'area' => 'site',
-),'',true,true);*/
+),'',true,true);
 
 
 $settings['modxRepository.request_path'] = $modx->newObject('modSystemSetting');
@@ -27,6 +27,16 @@ $settings['modxRepository.request_path']->fromArray(array(
     'namespace' => 'modxrepository',
     'area' => 'site',
 ),'',true,true);
+
+
+/*$settings['modxRepository.packages_path_url'] = $modx->newObject('modSystemSetting');
+$settings['modxRepository.packages_path_url']->fromArray(array(
+    'key' => 'modxRepository.packages_path_url',
+    'value' => '{site_url}packages/',
+    'xtype' => 'textfield',
+    'namespace' => 'modxrepository',
+    'area' => 'site',
+),'',true,true);*/
  
 
  
