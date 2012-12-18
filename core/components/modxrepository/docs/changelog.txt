@@ -1,3 +1,3 @@
-modxRepository-0.0.1-beta
+modxRepository-1.1.0-beta
 =============================================================
 First release

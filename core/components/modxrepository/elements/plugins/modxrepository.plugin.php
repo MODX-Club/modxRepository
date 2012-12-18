@@ -1,8 +1,9 @@
 <?php
 
 /*
- * modxRepository
- * modxstore.ru
+ * modxRepository by Fi1osof
+ * http://community.modx-cms.ru/profile/Fi1osof/
+ * http://modxstore.ru
  */
 
 if($modx->context->key == 'mgr')  return;
