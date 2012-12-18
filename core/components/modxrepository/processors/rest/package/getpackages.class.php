@@ -1,0 +1,171 @@
+<?php
+/*
+ * Получаем массив всех пакетов
+ */
+class modxRepositoryGetPackagesClass  extends modProcessor{
+    
+    var $TVs = array();
+    
+    function process(){
+        
+        /*
+         * Получаем ID TV-шек
+         */
+        
+        $this->getTVs();
+        
+        if($this->hasErrors()){
+            return false;
+        }
+        
+        $where = (array)$this->properties['where'];
+        $limit = ($this->properties['limit'] ? $this->properties['limit'] : 0);
+        $group = (array)$this->properties['group'];
+        $sort = (array)$this->properties['sort'];
+        return $this->getData($where, $limit, $group, $sort);
+    }
+    
+    
+    function getTVs(){
+        // Получаем ID TV-шек
+        $TVsNames = array(
+            'object_id',
+            'version_major',
+            'version_minor',
+            'version_patch',
+            'release',
+            'vrelease_index',
+            'r_description',
+            'instructions',
+            'changelog',
+            'file',
+        );
+        
+        // print '<pre>';
+        if(!$result = $this->modx->getCollection('modTemplateVar', array(
+            'name:IN'   => $TVsNames,
+        ))){
+            return $this->failure('Не были получены TV-параметры');
+        }
+        
+        foreach($result as $r){
+            $this->TVs[$r->name] = $r->id;
+        }
+        return $this->TVs;
+    }
+    
+        function getData($where = array(), $limit = 0, $group = array(), $sort = array()){
+        
+        $q = $this->modx->newQuery('modResource');
+        $q->innerJoin('modTemplateVarResource', 'object_id', "object_id.contentid = modResource.id");
+        $q->innerJoin('modResource', 'r', 'r.parent = modResource.id');
+        $q->innerJoin('modTemplateVarResource', 'r_object_id', "r_object_id.contentid = r.id");
+        $q->innerJoin('modTemplateVarResource', 'version_major', "version_major.contentid = r.id");
+        $q->innerJoin('modTemplateVarResource', 'version_minor', "version_minor.contentid = r.id");
+        $q->innerJoin('modTemplateVarResource', 'version_patch', "version_patch.contentid = r.id");
+        $q->innerJoin('modTemplateVarResource', '`release`', "`release`.contentid = r.id");
+        $q->innerJoin('modTemplateVarResource', '`file`', "`file`.contentid = r.id");
+        $q->innerJoin('modUser', '`user`', "`user`.id = r.createdby");
+        
+
+        $q->leftJoin('modTemplateVarResource', 'vrelease_index', 
+                "vrelease_index.contentid = r.id AND 'vrelease_index.tmplvarid'  = ". $this->TVs['vrelease_index']);
+        $q->leftJoin('modTemplateVarResource', 'r_description', 
+                "r_description.contentid = r.id AND 'r_description.tmplvarid'  = ". $this->TVs['r_description']);
+        $q->leftJoin('modTemplateVarResource', 'instructions', 
+                "instructions.contentid = r.id AND 'instructions.tmplvarid'  = ". $this->TVs['instructions']);
+        $q->leftJoin('modTemplateVarResource', 'changelog', 
+                "changelog.contentid = r.id AND 'changelog.tmplvarid'  = ". $this->TVs['changelog']);
+        
+        $q->select(array(
+            'modResource.*',
+            'modResource.id as package_id',
+            'object_id.value as object_id',
+            'r_object_id.value as release_id',
+            'r.pagetitle as release_name',
+            'version_major.value as version_major',
+            'version_minor.value as version_minor',
+            'version_patch.value as version_patch',
+            '`release`.value as `release`',
+            'vrelease_index.value as vrelease_index',
+            '`user`.username as `author`',
+            '`user`.username as `r_createdby`',
+            'r_description.value as release_description',
+            'instructions.value as instructions',
+            'changelog.value as changelog',
+            'r.createdon as release_createdon',
+            'r.editedon as release_editedon',
+            'r.publishedon as releasedon',
+            'file.value as file',
+            'file.id as file_id',
+        ));
+        
+        $where = array_merge(array(
+            'modResource.published' =>  1,
+            'modResource.deleted'   => 0,
+            'modResource.hidemenu'  => 0,
+            'r.published' =>  1,
+            'r.deleted'   => 0,
+            'r.hidemenu'  => 0,
+            'object_id.tmplvarid'  => $this->TVs['object_id'],
+            'r_object_id.tmplvarid'  => $this->TVs['object_id'],
+            'version_major.tmplvarid'  => $this->TVs['version_major'],
+            'version_minor.tmplvarid'  => $this->TVs['version_minor'],
+            'version_patch.tmplvarid'  => $this->TVs['version_patch'],
+            '`release`.tmplvarid'  => $this->TVs['release'],
+            'file.tmplvarid'  => $this->TVs['file'],
+        ), $where);
+        
+        $q->where($where);
+        $q->limit($limit);
+        
+        if($sort){
+            foreach($sort as $s){
+                $arr = explode(",",  $s);
+                $by = trim($arr[0]);
+                if(!$dir = trim($arr[1])){
+                    $dir = 'ASC';
+                }
+                $q->sortby($by, $dir);
+            }
+        }
+        
+        // $q->groupby('modResource.id');
+        
+        $q->prepare();
+        
+        
+        // Группируем результат
+        if($group = (array)$group){
+            $sql = $q->toSQL();
+        
+            $sql = "SELECT * from ({$sql}) AS t";
+            $sql .= " group by ". implode(", ", $group);
+            $q->stmt = $this->modx->prepare($sql);
+            //package_id
+        }
+           
+        
+        // print $query->toSQL();
+        //print_R($query->queryString);
+        // exit;
+        
+        
+        if(!$q->stmt->execute() OR !$result = $q->stmt->fetchAll(PDO::FETCH_ASSOC)){
+            $this->failure("Не были получены пакеты");
+            return false;
+        }
+         
+        /*print_R($result);
+        exit;*/
+         
+        /*if(!$repositories = $this->modx->getCollection('modResource', $q)){
+            
+        }*/
+        
+        return $result;
+    }
+}
+
+return 'modxRepositoryGetPackagesClass';
+?>
