@@ -1,10 +1,11 @@
 <?php
 
-/**
- * Loads system settings into build
- *
- * @package modextra
+/*
+ * @package modxRepository
  * @subpackage build
+ * @author Fi1osof
+ * http://community.modx-cms.ru/profile/Fi1osof/
+ * http://modxstore.ru
  */
 $result = array();
 
@@ -161,8 +162,5 @@ $TemplateVar = $modx->newObject('modTemplateVar', array(
     'rank'              => 110,
 )); 
 $result[] = $TemplateVar;
-
-
-
 
 return $result;

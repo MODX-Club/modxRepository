@@ -1,6 +1,12 @@
 <?php
  
-
+/*
+ * @package modxRepository
+ * @subpackage build
+ * @author Fi1osof
+ * http://community.modx-cms.ru/profile/Fi1osof/
+ * http://modxstore.ru
+ */
 require_once dirname(dirname(dirname(dirname(__FILE__)))).'/core/config/config.inc.php';
   
 $pkg_name = 'modxRepository';

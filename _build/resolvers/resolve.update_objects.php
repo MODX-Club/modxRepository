@@ -1,9 +1,15 @@
 <?php 
+/*
+ * @package modxRepository
+ * @subpackage build
+ * @author Fi1osof
+ * http://community.modx-cms.ru/profile/Fi1osof/
+ * http://modxstore.ru
+ */
 
 if ($object->xpdo) {
     $modx =& $object->xpdo;
-    // $modelPath = $modx->getOption($pkgName.'.core_path',null,$modx->getOption('core_path').'components/'.$pkgName.'/').'model/';
-
+  
     switch ($options[xPDOTransport::PACKAGE_ACTION]) {
         case xPDOTransport::ACTION_INSTALL:
         case xPDOTransport::ACTION_UPGRADE:
@@ -92,9 +98,7 @@ if ($object->xpdo) {
             break;
 
         case xPDOTransport::ACTION_UNINSTALL:
-            if ($modx instanceof modX) {
-                // $modx->removeExtensionPackage($pkgName);
-            }
+            if ($modx instanceof modX) {}
             break;
     }
 }

@@ -64,13 +64,6 @@ class modxRepositoryGetPackagesClass  extends modProcessor{
         $q->innerJoin('modTemplateVarResource', '`file`', "`file`.contentid = r.id");
         $q->innerJoin('modUser', '`user`', "`user`.id = r.createdby");
         
-
-        /*
-         * 
-        $q->innerJoin('modTemplateVarResource', 'version_major', "version_major.contentid = r.id");
-        $q->innerJoin('modTemplateVarResource', 'version_minor', "version_minor.contentid = r.id");
-        $q->innerJoin('modTemplateVarResource', 'version_patch', "version_patch.contentid = r.id");
-         */
         
         $q->leftJoin('modTemplateVarResource', 'vrelease_index', 
                 "vrelease_index.contentid = r.id AND vrelease_index.tmplvarid  = ". $this->TVs['vrelease_index']);

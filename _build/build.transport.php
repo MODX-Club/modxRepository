@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * @package modxRepository
+ * @subpackage build
+ * @author Fi1osof
+ * http://community.modx-cms.ru/profile/Fi1osof/
+ * http://modxstore.ru
+ */
 
 $mtime= microtime();
 $mtime= explode(" ", $mtime);

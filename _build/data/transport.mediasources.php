@@ -1,8 +1,11 @@
 <?php
 
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * @package modxRepository
+ * @subpackage build
+ * @author Fi1osof
+ * http://community.modx-cms.ru/profile/Fi1osof/
+ * http://modxstore.ru
  */
 $mediaSources = array();
 

@@ -146,7 +146,7 @@ class modxRepositoryHome extends modxRepositoryResponse{
             return;
         }
         
-        //  $packArray = $result->toArray();
+        
         $packArray = $result;
         $package = $this->preparePackageRow($packArray);
          

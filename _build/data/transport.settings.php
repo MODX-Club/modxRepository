@@ -1,10 +1,11 @@
 <?php
 
-/**
- * Loads system settings into build
- *
- * @package modextra
+/*
+ * @package modxRepository
  * @subpackage build
+ * @author Fi1osof
+ * http://community.modx-cms.ru/profile/Fi1osof/
+ * http://modxstore.ru
  */
 global  $modx, $sources;
 $settings = array();
@@ -27,17 +28,6 @@ $settings['modxRepository.request_path']->fromArray(array(
     'namespace' => 'modxrepository',
     'area' => 'site',
 ),'',true,true);
-
-
-/*$settings['modxRepository.packages_path_url'] = $modx->newObject('modSystemSetting');
-$settings['modxRepository.packages_path_url']->fromArray(array(
-    'key' => 'modxRepository.packages_path_url',
-    'value' => '{site_url}packages/',
-    'xtype' => 'textfield',
-    'namespace' => 'modxrepository',
-    'area' => 'site',
-),'',true,true);*/
- 
 
  
 return $settings;

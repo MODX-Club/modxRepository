@@ -1,5 +1,11 @@
 <?php
-global  $modx, $sources;
+/*
+ * @package modxRepository
+ * @subpackage build
+ * @author Fi1osof
+ * http://community.modx-cms.ru/profile/Fi1osof/
+ * http://modxstore.ru
+ */
 
 $plugins = array();
 
