@@ -26,9 +26,7 @@ if(strpos($resourceIdentifier, $request_path) !== 0){
 
 if(!$action = substr($resourceIdentifier, strlen($request_path))){
     return;
-}
-
-
+} 
 // Get processors path
 if(!$ns = $modx->getObject('modNamespace', 'modxrepository')){
     $modx->log(xPDO::LOG_LEVEL_ERROR, "Не было пролучено пространство имен modxrepository");
@@ -36,9 +34,16 @@ if(!$ns = $modx->getObject('modNamespace', 'modxrepository')){
 }
 $processors_path = $ns->getCorePath().'processors/';
 
+$options = array(
+    'processors_path'   => $processors_path,
+    'location'          => 'rest',
+);
+
 if (!isset($_POST)) $_POST = array();
 if (!isset($_GET)) $_GET = array();
-$scriptProperties = array_merge($_GET,$_POST);
+$scriptProperties = array_merge($_GET,$_POST, array(
+    'handler_doc_id'   => $modx->getOption('modxRepository.handler_doc_id', null, false),
+));
 
 $actionArray = explode('/', $action);
 
@@ -57,14 +62,10 @@ if(count($actionArray) > 1){
     }
 }
 
-if(!$response = $modx->runProcessor($action, $scriptProperties, array(
-    'processors_path'   => $processors_path,
-    'location'          => 'rest',
-))){
+if(!$response = $modx->runProcessor($action, $scriptProperties, $options)){
     $modx->log(xPDO::LOG_LEVEL_ERROR, "Не было пролучено пространство имен modxrepository");
     return;
 }
-
 
 print $response->getResponse();
 exit;

@@ -1,3 +1,10 @@
+modxRepository-1.2.0-beta
+=============================================================
+1.  Added multi-contexts solution
+2.  Install repository bugfix
+3.  Minor bugfix
+
+
 modxRepository-1.1.0-beta
 =============================================================
 First release

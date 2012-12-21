@@ -14,7 +14,6 @@ class modxRepositoryHome extends modxRepositoryResponse{
     public function process(){
         
         
-        // return $this->toArray(1);
         if($this->category_id = $this->properties['tag']){
             $result = $this->getPackagesByTag();
         }
@@ -35,7 +34,6 @@ class modxRepositoryHome extends modxRepositoryResponse{
      */
     
     function getPackagesByTag(){
-        // $description = "Desc";
         
         $scriptProperties = array_merge($this->properties, array(
             'where' => array(
@@ -43,7 +41,7 @@ class modxRepositoryHome extends modxRepositoryResponse{
             ),
             'limit' => 0,
         ));
-        $response = $this->runProcessor('repository/getrepository', $scriptProperties);
+        $response = $this->runProcessor('repository/getrepositories', $scriptProperties);
         
           
         if(!$repository = current($response->getResponse())){
@@ -102,7 +100,6 @@ class modxRepositoryHome extends modxRepositoryResponse{
     function fetchPackages(& $resultObject, & $packagesArray){
         foreach($packagesArray as $p){
             $resultObject[] = array(
-                // 'package' => $this->preparePackageRow($p->toArray()),
                 'package' => $this->preparePackageRow($p),
             );
         }
@@ -145,7 +142,6 @@ class modxRepositoryHome extends modxRepositoryResponse{
             $this->failure("Не был получен пакет");
             return;
         }
-        
         
         $packArray = $result;
         $package = $this->preparePackageRow($packArray);

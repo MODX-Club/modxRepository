@@ -2,7 +2,7 @@
 /*
  * Получаем массив всех пакетов
  */
-class modxRepositoryGetPackagesClass  extends modProcessor{
+class modxRepositoryGetPackagesClass  extends modxRepositoryProcessor{
     
     var $TVs = array();
     
@@ -17,7 +17,6 @@ class modxRepositoryGetPackagesClass  extends modProcessor{
         if($this->hasErrors()){
             return false;
         }
-        
         $where = (array)$this->properties['where'];
         $limit = ($this->properties['limit'] ? $this->properties['limit'] : 0);
         $group = (array)$this->properties['group'];
@@ -54,7 +53,22 @@ class modxRepositoryGetPackagesClass  extends modProcessor{
         return $this->TVs;
     }
     
-        function getData($where = array(), $limit = 0, $group = array(), $sort = array()){
+    function getData($where = array(), $limit = 0, $group = array(), $sort = array()){
+        /*
+         * Get repositories IDs
+         */
+        $parents = array();
+        
+        if($this->getProperty('root')){
+            $response = $this->runProcessor('repository/getrepositories', $this->getProperties());
+            if(!$repositories = $response->getResponse()){
+                $this->failure('Failure get repositories');
+                return false;
+            }
+            foreach($repositories  as $r){
+                $parents[] = $r->id;
+            }
+        }
         
         $q = $this->modx->newQuery('modResource');
         $q->innerJoin('modTemplateVarResource', 'object_id', "object_id.contentid = modResource.id");
@@ -63,7 +77,6 @@ class modxRepositoryGetPackagesClass  extends modProcessor{
         $q->innerJoin('modTemplateVarResource', '`release`', "`release`.contentid = r.id");
         $q->innerJoin('modTemplateVarResource', '`file`', "`file`.contentid = r.id");
         $q->innerJoin('modUser', '`user`', "`user`.id = r.createdby");
-        
         
         $q->leftJoin('modTemplateVarResource', 'vrelease_index', 
                 "vrelease_index.contentid = r.id AND vrelease_index.tmplvarid  = ". $this->TVs['vrelease_index']);
@@ -105,6 +118,7 @@ class modxRepositoryGetPackagesClass  extends modProcessor{
             'file.id as file_id',
         ));
         
+        
         $where = array_merge(array(
             'modResource.published' =>  1,
             'modResource.deleted'   => 0,
@@ -116,7 +130,11 @@ class modxRepositoryGetPackagesClass  extends modProcessor{
             'r_object_id.tmplvarid'  => $this->TVs['object_id'],
             '`release`.tmplvarid'  => $this->TVs['release'],
             'file.tmplvarid'  => $this->TVs['file'],
-        ), $where);
+        ), $where );
+        
+        if($parents){
+            $where['modResource.parent:IN'] =  $parents;
+        }
         
         $q->where($where);
         $q->limit($limit);
@@ -132,7 +150,6 @@ class modxRepositoryGetPackagesClass  extends modProcessor{
             }
         }
         
-        
         $q->prepare();
         
         
@@ -145,11 +162,12 @@ class modxRepositoryGetPackagesClass  extends modProcessor{
             $q->stmt = $this->modx->prepare($sql);
             //package_id
         }
-            
+        
         if(!$q->stmt->execute() OR !$result = $q->stmt->fetchAll(PDO::FETCH_ASSOC)){
             $this->failure("Не были получены пакеты");
             return false;
         }
+        
         return $result;
     }
 }

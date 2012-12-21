@@ -2,11 +2,10 @@
 /*
  * Абстрактный класс для вывода результатов запросов в XML
  */
-abstract class modxRepositoryResponse extends modProcessor{
-    var $root = '<root/>';
+
+abstract class modxRepositoryProcessor extends modProcessor{
     
     var $processorsParams = array();
-    
     
     function __construct(modX &$modx, array $properties = array()) {
         // Получаем путь до процессоров
@@ -17,26 +16,30 @@ abstract class modxRepositoryResponse extends modProcessor{
             return; 
         }  
         
-        $processors_path = $ns->getCorePath().'processors/';
-        
+        // Get processors params
         $this->processorsParams  = array(
-            'processors_path'   => $processors_path,
-            'location'          => 'rest',
+            'processors_path'   => $ns->getCorePath().'processors/',
+            'location'          => 'rest/',
         );
+        
+        if(!$this->parent = $modx->getOption('modxRepository.handler_doc_id', null, false)){
+            return $this->failure('Не был получен ID раздела');
+        }
         
         parent::__construct($modx, $properties);
     }
     
-
     public function runProcessor($action, $scriptProperties = array()){
-        
-        
         if(!$this->processorsParams){
             $this->failure("Не были получены данные процессоров");
             return false;
         }
         return $this->modx->runProcessor($action, $scriptProperties, $this->processorsParams);
     }
+}
+
+abstract class modxRepositoryResponse extends modxRepositoryProcessor{
+    var $root = '<root/>';
 
     public function toXML($response, $rootParams =  array()){
         header('Content-type:text/xml', 1);
@@ -79,5 +82,5 @@ abstract class modxRepositoryResponse extends modProcessor{
     }
 }
 
-return 'modxRepositoryResponse';
+return 'modxRepositoryProcessor';
 ?>

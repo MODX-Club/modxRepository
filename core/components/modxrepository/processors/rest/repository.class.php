@@ -16,7 +16,6 @@ class modxRepositoryRepository extends modxRepositoryResponse{
             return $this->failure('Не был получен ID раздела');
         }
         
-        
         if(!$data = $this->getData()){
             exit;
             return false;

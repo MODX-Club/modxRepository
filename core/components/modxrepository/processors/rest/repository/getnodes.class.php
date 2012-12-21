@@ -75,15 +75,13 @@ class modxRepositoryHome extends modxRepositoryResponse{
             'limit' => $limit,
         ));
         
-        $result = $this->runProcessor('repository/getrepository', $scriptProperties);
+        $result = $this->runProcessor('repository/getrepositories', $scriptProperties);
         
         return $result->getResponse();
     }
     
     
     function prepareRepositoryRow($data){
-        // print_r($data);
-        
         return array(
             'description'   => "{$data['description']}>",
             'templated'     => !empty($data['templated']) ? $data['templated'] : 0,

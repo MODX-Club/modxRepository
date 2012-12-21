@@ -74,10 +74,15 @@ if ($object->xpdo) {
                         'name' => $t,
                     ));
                         foreach($tpls as $tpl){
-                            $tplvar = $modx->newObject('modTemplateVarTemplate');
-                            $tplvar->addOne($$t); 
-                            $tplvar->addOne($$tpl); 
-                            $tplvar->save();
+                            if(!$modx->getObject('modTemplateVarTemplate', array(
+                                'tmplvarid' => $$t->id,
+                                'templateid' => $$tpl->id,
+                            ))){
+                                $tplvar = $modx->newObject('modTemplateVarTemplate');
+                                $tplvar->addOne($$t); 
+                                $tplvar->addOne($$tpl); 
+                                $tplvar->save();
+                            }
                         }
                     }
                     
@@ -87,7 +92,12 @@ if ($object->xpdo) {
                     
                     if($media = $modx->getObject('sources.modMediaSource', array(
                         'name' => 'Repository Packages',
-                    )) AND $sl = $modx->newObject('sources.modMediaSourceElement')){
+                    )) AND !$modx->getObject('sources.modMediaSourceElement', array(
+                        'source' => $media->id,
+                        'object' => $file->id,
+                        'object_class' => 'modTemplateVar',
+                    ))
+                    AND $sl = $modx->newObject('sources.modMediaSourceElement')){
                         $sl->set('source', $media->id);
                         $sl->set('object', $file->id);
                         $sl->set('object_class', 'modTemplateVar');

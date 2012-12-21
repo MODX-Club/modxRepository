@@ -56,13 +56,14 @@ class modxRepositoryHome extends modxRepositoryResponse{
         return $result;
     }
     
-    function getNewest(){
+    function getNewest(){ 
         $response = $this->runProcessor('package/getpackages', array(
             'where' => array(
             ),
             'sort'  => array('r.publishedon, DESC'),
             'group' => array('package_id'),
             'limit' => 10,
+            'root'  => $this->getProperty('handler_doc_id'),
         ));
         
         if($result = $response->getResponse()){
