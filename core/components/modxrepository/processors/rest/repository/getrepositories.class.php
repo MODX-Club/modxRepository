@@ -32,7 +32,6 @@ class modxRepositoryGetRepositories extends modxRepositoryProcessor{
             'object_id'
         );
         
-        // print '<pre>';
         if(!$result = $this->modx->getCollection('modTemplateVar', array(
             'name:IN'   => $TVsNames,
         ))){
@@ -46,12 +45,13 @@ class modxRepositoryGetRepositories extends modxRepositoryProcessor{
     }
     
     function getData($where = array(), $limit = 0){
+        $context_key = $this->modx->context->get('key');
         
         /*
          * If root exists, get repositories parents
          */
         $parents = array();
-        if($root = $this->getProperty('root' )){
+        if($root = $this->getProperty('root')){
             $q = $this->modx->newQuery('modResource');
             $q->select(array('modResource.id'));
             $q->where(array(
@@ -59,6 +59,7 @@ class modxRepositoryGetRepositories extends modxRepositoryProcessor{
                 'modResource.deleted' => false,
                 'modResource.hidemenu' => false,
                 'modResource.parent' => $root,
+                'context_key'   => $context_key,
             ));
             if(!$q->prepare() OR !$q->stmt->execute() OR !$result = $q->stmt->FetchAll(PDO::FETCH_ASSOC)){
                 $this->failure('Failure get repositories parents');
@@ -68,7 +69,6 @@ class modxRepositoryGetRepositories extends modxRepositoryProcessor{
             }
         }
        
-        
         /*
          * Get Repositories
          */
@@ -89,6 +89,7 @@ class modxRepositoryGetRepositories extends modxRepositoryProcessor{
             'hidemenu'  => 0,
             'object_id.tmplvarid'  => $this->TVs['object_id'],
             'tpl.templatename'  => 'Repository',
+            'context_key'   => $context_key,
         ), $where);
         
         if($parents){

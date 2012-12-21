@@ -16,40 +16,43 @@ class modxRepositoryRepository extends modxRepositoryResponse{
             return $this->failure('Не был получен ID раздела');
         }
         
-        if(!$data = $this->getData()){
-            exit;
-            return false;
-        }
+        $data = $this->getData();
         
         return $this->toXML($data, $this->params);
     }
     
-    public function getData(){
+    function getData(){
+        $result = array(); 
+        $params = array_merge($this->getProperties(), array(
+            'where' => array(
+                'parent'    => $this->parent,
+            )
+        ));
+        
+        $response = $this->runProcessor('repository/getrepositories',$params );
+        if(!$repositories = $response->getResponse()){
+            $this->failure('Failure get repositories');
+            return false;
+        }
+        foreach($repositories as $repository){
+            $result[] = array(
+                'repository' => $this->prepareRow($repository->toArray()),
+            );
+        } 
+        $this->params = array(
+            'type'  => 'array',
+            'of'    => '1',
+            'page'  => '1',
+            'total' =>  count($repositories),
+        );
+         
+        return $result;
+    }
+    
+    /*public function getData__(){
         $url = $this->modx->getOption('site_url', null);
         $url  .= $this->modx->getOption('modxRepository.request_path', null).'package/';
-        
-        
-        
-        $repositories = array(
-            array(
-                'description'   => 'Desc',
-                'templated'     => 0,
-                'rank'          => 1,
-                'packages'      => 3,
-                'createdon'     => '2011-02-09T14:36:08Z',
-                'name' =>   'Front End Templates',
-                'id'    => '4d52a654b2b083055d000004',
-            ),
-            array(
-                'description'   => 'Desc2',
-                'templated'     => 1,
-                'rank'          => 1,
-                'packages'      => 3,
-                'createdon'     => '2011-02-09T14:36:08Z',
-                'name' =>   'Front 2',
-                'id'    => '4d52a654b2b083055d011454',
-            ),
-        ); 
+         
         
         // Получаем ID TV-шек
         $TVsNames = array(
@@ -109,7 +112,7 @@ class modxRepositoryRepository extends modxRepositoryResponse{
         );
          
         return $result;
-    }
+    }*/
     
     function prepareRow($data){ 
         
