@@ -12,7 +12,6 @@ class modxRepositoryDownload extends modxRepositoryResponse{
         if($this->properties['getUrl'] == true){
             return $this->getFileUrl($this->properties['id']);
         }
-        
         return;
     }
     

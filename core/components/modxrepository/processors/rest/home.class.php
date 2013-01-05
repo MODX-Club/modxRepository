@@ -60,7 +60,7 @@ class modxRepositoryHome extends modxRepositoryResponse{
         $response = $this->runProcessor('package/getpackages', array(
             'where' => array(
             ),
-            'sort'  => array('r.publishedon, DESC'),
+            'sort'  => array('releasedon, DESC'),
             'group' => array('package_id'),
             'limit' => 10,
             'root'  => $this->getProperty('handler_doc_id'),

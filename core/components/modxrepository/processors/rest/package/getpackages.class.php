@@ -159,6 +159,25 @@ class modxRepositoryGetPackagesClass  extends modxRepositoryProcessor{
         
             $sql = "SELECT * from ({$sql}) AS t";
             $sql .= " group by ". implode(", ", $group);
+            
+            if($sort){
+                $order_arr = array();
+                foreach($sort as $s){
+                    $arr = explode(",",  $s);
+                    $by = trim($arr[0]);
+                    if(!$dir = trim($arr[1])){
+                        $dir = 'ASC';
+                    }
+                    // remove aliases
+                    $by_arr = explode('.', $by);
+                    if($by_arr[1]){
+                        $by = $by_arr[1];
+                    }
+                    $order_arr[] = "t.{$by} {$dir}";
+                }
+                $sql .= " ORDER BY ". implode(", ", $order_arr);
+            }
+            
             $q->stmt = $this->modx->prepare($sql);
             //package_id
         }
