@@ -8,6 +8,8 @@ abstract class modxRepositoryProcessor extends modProcessor{
     var $processorsParams = array();
     
     function __construct(modX &$modx, array $properties = array()) {
+        parent::__construct($modx, $properties);
+        
         // Получаем путь до процессоров
         if(!$ns = $modx->getObject('modNamespace', 'modxrepository')){
             $err = "Не было получено пространство имен modxrepository";
@@ -22,11 +24,12 @@ abstract class modxRepositoryProcessor extends modProcessor{
             'location'          => 'rest/',
         );
         
+        /*
+         * Be sure you set system setting modxRepository.handler_doc_id  
+         */
         if(!$this->parent = $modx->getOption('modxRepository.handler_doc_id', null, false)){
-            return $this->failure('Не был получен ID раздела');
+            return $modx->log( xPDO::LOG_LEVEL_ERROR, 'Please, be sure you set system setting modxRepository.handler_doc_id');
         }
-        
-        parent::__construct($modx, $properties);
     }
     
     public function runProcessor($action, $scriptProperties = array()){

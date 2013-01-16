@@ -11,18 +11,7 @@ require_once dirname(dirname(dirname(dirname(__FILE__)))).'/core/config/config.i
   
 $pkg_name = 'modxRepository';
     
-/* define package */
-define('PKG_NAME', $pkg_name);
-define('PKG_NAME_LOWER',strtolower(PKG_NAME));
-define('NAMESPACE_NAME', PKG_NAME_LOWER);
 
-define('PKG_PATH', PKG_NAME_LOWER);
-define('PKG_CATEGORY', PKG_NAME);
-
-$pkg_version = '1.2.2';
-$pkg_release = 'beta';
-define('PKG_VERSION', $pkg_version); 
-define('PKG_RELEASE', $pkg_release); 
 
 /* define sources */
 $root = dirname(dirname(__FILE__)).'/';

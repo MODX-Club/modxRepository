@@ -1,3 +1,8 @@
+modxRepository-1.2.3-beta
+=============================================================
+1.  modxRepositoryProcessor::__construct bugfix
+
+
 modxRepository-1.2.2-beta
 =============================================================
 1.  Get packages DB-request bugfix

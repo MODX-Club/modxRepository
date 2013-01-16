@@ -14,14 +14,23 @@ $mtime= $mtime[1] + $mtime[0];
 $tstart = $mtime;
 
 
+/* define package */
+define('PKG_NAME', $pkg_name);
+define('PKG_NAME_LOWER',strtolower(PKG_NAME));
+define('NAMESPACE_NAME', PKG_NAME_LOWER);
+
+define('PKG_PATH', PKG_NAME_LOWER);
+define('PKG_CATEGORY', PKG_NAME);
+
+$pkg_version = '1.2.3';
+$pkg_release = 'beta';
+define('PKG_VERSION', $pkg_version); 
+define('PKG_RELEASE', $pkg_release); 
+
 print '<pre>';
 require_once dirname(__FILE__). '/build.config.php';
 
-
-$modx= new modX();
-
-
-$modx->initialize('mgr');
+ 
 $modx->setLogLevel(modX::LOG_LEVEL_INFO);
 $modx->setLogTarget('ECHO'); echo '<pre>'; flush();
 
@@ -187,6 +196,9 @@ $builder->setPackageAttributes(array(
     'license' => file_get_contents($sources['docs'] . 'license.txt'),
     'readme' => file_get_contents($sources['docs'] . 'readme.txt'),
     'changelog' => file_get_contents($sources['docs'] . 'changelog.txt'), 
+    'setup-options' => array(
+        'source' => $sources['build'].'setup.options.php',
+    ), 
 ));
 $modx->log(modX::LOG_LEVEL_INFO,'Packaged in package attributes.'); flush();
 
