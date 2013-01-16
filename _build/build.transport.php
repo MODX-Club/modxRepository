@@ -15,6 +15,8 @@ $tstart = $mtime;
 
 
 /* define package */
+$pkg_name = 'modxRepository';
+    
 define('PKG_NAME', $pkg_name);
 define('PKG_NAME_LOWER',strtolower(PKG_NAME));
 define('NAMESPACE_NAME', PKG_NAME_LOWER);
