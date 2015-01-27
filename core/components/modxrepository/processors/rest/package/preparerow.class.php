@@ -58,7 +58,7 @@ class modxRepositoryPackagePrepareRow extends modProcessor{
             'breaks_at'    => 10000000.0,          
             'screenshot'    => $data['screenshot'],
             'releasedon'    => date('Y-m-d H:i:s', $data['release_createdon']),
-            'downloads'     => 3,
+            'downloads'     => isset($data['downloads']) ? $data['downloads'] : 0,
         );
     }
 }

@@ -38,6 +38,7 @@ class modxRepositoryGetPackagesClass  extends modxRepositoryProcessor{
             'instructions',
             'changelog',
             'file',
+            'downloads',
         );
         
         
@@ -93,6 +94,8 @@ class modxRepositoryGetPackagesClass  extends modxRepositoryProcessor{
                 "version_minor.contentid = r.id AND version_minor.tmplvarid = ". $this->TVs['version_minor']);
         $q->leftJoin('modTemplateVarResource', 'version_patch', 
                 "version_patch.contentid = r.id AND version_patch.tmplvarid = ". $this->TVs['version_patch']);
+        $q->leftJoin('modTemplateVarResource', 'downloads', 
+                "downloads.contentid = r.id AND downloads.tmplvarid = ". $this->TVs['downloads']);
         
         $q->select(array(
             'modResource.*',
@@ -116,6 +119,7 @@ class modxRepositoryGetPackagesClass  extends modxRepositoryProcessor{
             'changelog.value as changelog',
             'file.value as file',
             'file.id as file_id',
+            'downloads.value as downloads',
         ));
         
         

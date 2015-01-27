@@ -38,6 +38,9 @@ class modxRepositoryDownload extends modxRepositoryResponse{
         
         $package = current($result);
         
+        # $this->modx->log(1, print_r($id, 1));
+        # $this->modx->log(1, print_r($package, 1));
+        
         $url = $this->modx->getOption('site_url', null);
         
         $q = $this->modx->newQuery('modTemplateVar');
@@ -49,6 +52,17 @@ class modxRepositoryDownload extends modxRepositoryResponse{
         $package_url = $tv->renderOutput($package['r_content_id']);
         $package_url = preg_replace('/^\//','',$package_url);
         $url .= $package_url;
+        
+        
+        // Count downloads
+        if(
+            !empty($package['r_content_id'])
+            AND $resource = $this->modx->getObject('modResource', $package['r_content_id'])
+        ){
+            $count = (int)$resource->getTVValue('downloads');
+            $resource->setTVValue('downloads', $count + 1);
+        }
+        
         return $url;
     }
 }
