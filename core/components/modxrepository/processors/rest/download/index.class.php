@@ -57,7 +57,7 @@ class modxRepositoryDownload extends modxRepositoryResponse{
         // Count downloads
         if(
             !empty($package['r_content_id'])
-            AND $resource = $this->modx->getObject('modResource', $package['r_content_id'])
+            AND $resource = $this->modx->getObject('modResource', $package['id'])
         ){
             $count = (int)$resource->getTVValue('downloads');
             $resource->setTVValue('downloads', $count + 1);
